@@ -3,7 +3,7 @@ class ArticlesController < ApplicationController
   except: [:index, :show]
 
   def index
-    @articles = Article.order(created_at: :desc).page(param_page).per(5)
+    @articles = Article.order(created_at: :desc).page(param_page).per(10)
   end
 
   def show
@@ -52,6 +52,6 @@ class ArticlesController < ApplicationController
   end
 
   def article_params
-    params.require(:article).permit(:title, :text)
+    params.require(:article).permit(:title, :text, :category)
   end
 end

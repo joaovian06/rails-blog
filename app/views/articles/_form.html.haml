@@ -17,4 +17,6 @@
     %br/
     = form.text_area :text
   %p
+    = form.select :category, Article.categories
+  %p
     = form.submit
