@@ -5,4 +5,3 @@ class Article < ApplicationRecord
                     length: { minimum: 5 }
   validates :category, presence: true
 end
-

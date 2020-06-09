@@ -3,10 +3,7 @@ class ArticlesController < ApplicationController
   except: [:index, :show]
   PER_PAGE = 10
   def index
-    if filter_param.nil?
-      @articles = Article.order(created_at: :desc).page(param_page).per(5).where(category: filter_param)
-    elsif filter_param.empty?
-      Article.categories.fetch("", :All)
+    if filter_param.empty?
       @articles = Article.order(created_at: :desc).page(param_page).per(5)
     else
       @articles = Article.order(created_at: :desc).page(param_page).per(5).where(category: filter_param)
@@ -55,7 +52,7 @@ class ArticlesController < ApplicationController
   private
 
   def filter_param
-    params[:category]
+    params.fetch(:category, "")
   end
 
   def param_page
