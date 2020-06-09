@@ -1,9 +1,16 @@
 class ArticlesController < ApplicationController
   http_basic_authenticate_with name: "dhh", password: "secret",
   except: [:index, :show]
-
+  PER_PAGE = 10
   def index
-    @articles = Article.order(created_at: :desc).page(param_page).per(10)
+    if filter_param.nil?
+      @articles = Article.order(created_at: :desc).page(param_page).per(5).where(category: filter_param)
+    elsif filter_param.empty?
+      Article.categories.fetch("", :All)
+      @articles = Article.order(created_at: :desc).page(param_page).per(5)
+    else
+      @articles = Article.order(created_at: :desc).page(param_page).per(5).where(category: filter_param)
+    end
   end
 
   def show
@@ -46,6 +53,10 @@ class ArticlesController < ApplicationController
   end
 
   private
+
+  def filter_param
+    params[:category]
+  end
 
   def param_page
     params[:page] || 1

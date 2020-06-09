@@ -1,5 +1,10 @@
 %h1 Listing all articles
 
+= form_with method: :get, local: true, url: articles_url do |form|
+  %p
+    = form.select :category, Article.categories, include_blank: 'All', selected: params[:category]
+  %p
+    = form.submit "Search"
 %table
 
   %tr
@@ -18,5 +23,4 @@
         method: :delete,
         data: { confirm: 'Are you sure?' }
   %td= link_to 'New Article', new_article_url
-
 = paginate @articles
