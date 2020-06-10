@@ -2,12 +2,10 @@ class ArticlesController < ApplicationController
   http_basic_authenticate_with name: 'dhh', password: 'secret',
   except: [:index, :show]
   PER_PAGE = 10
+
   def index
-    if filter_param.empty?
-      @articles = Article.order(created_at: :desc).page(param_page)
-    else
-      @articles = Article.order(created_at: :desc).page(param_page).where(category: filter_param)
-    end
+    @articles = Article.order(created_at: :desc).page(param_page).per(PER_PAGE)
+    @articles = @articles.where(category: filter_param) if filter_param.present?
   end
 
   def show
@@ -33,7 +31,6 @@ class ArticlesController < ApplicationController
 
   def update
     @article = Article.find(params[:id])
-
     if @articles.update(article_params)
       redirect_to @article
     else
