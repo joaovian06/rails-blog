@@ -1,12 +1,12 @@
 class ArticlesController < ApplicationController
-  http_basic_authenticate_with name: "dhh", password: "secret",
+  http_basic_authenticate_with name: 'dhh', password: 'secret',
   except: [:index, :show]
   PER_PAGE = 10
   def index
     if filter_param.empty?
-      @articles = Article.order(created_at: :desc).page(param_page).per(5)
+      @articles = Article.order(created_at: :desc).page(param_page)
     else
-      @articles = Article.order(created_at: :desc).page(param_page).per(5).where(category: filter_param)
+      @articles = Article.order(created_at: :desc).page(param_page).where(category: filter_param)
     end
   end
 
@@ -24,7 +24,6 @@ class ArticlesController < ApplicationController
 
   def create
     @article = Article.new(article_params)
-
     if @article.save
       redirect_to @article
     else
@@ -52,7 +51,7 @@ class ArticlesController < ApplicationController
   private
 
   def filter_param
-    params.fetch(:category, "")
+    params.fetch(:category, '')
   end
 
   def param_page

@@ -3,7 +3,6 @@ RSpec.describe Article, type: :model do
   describe 'enums' do
     let(:article) { FactoryBot.create(:article) }
     it 'title must be present in a article' do
-      #expect(article.title).not_to eq nil
       is_expected.to validate_presence_of(:title)
     end
     it 'title needs to have 5 caracters in less' do
