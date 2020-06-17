@@ -9,7 +9,8 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    @article = Article.find(params[:id])
+    @article = Article.find_by(id: params[:id])
+    redirect_to articles_path unless @article.present?
   end
 
   def new
@@ -17,7 +18,8 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @article = Article.find(params[:id])
+    @article = Article.find_by(id: params[:id])
+    redirect_to articles_path unless @article.present?
   end
 
   def create

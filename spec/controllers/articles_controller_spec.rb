@@ -1,38 +1,62 @@
 require 'rails_helper'
+require 'date'
 
 RSpec.describe ArticlesController, type: :controller do
   describe '#index' do
-    context 'no category selected' do
-      let!(:articles) { FactoryBot.create_list(:article, 2) }
+    describe 'categories' do
+      context 'no category selected' do
+        let!(:articles) { FactoryBot.create_list(:article, 2) }
+        before { get :index }
 
-      before { get :index }
-
-      it 'return all articles in view' do
-        expect(assigns[:articles]).to match_array(articles)
+        it 'return all articles in view' do
+          expect(assigns[:articles]).to match_array(articles)
+        end
       end
 
-      it 'be organized in descending order' do
-      end
+      context 'category selected' do
+        let!(:scientific) { FactoryBot.create(:article, category: :scientific) }
+        let!(:news) { FactoryBot.create(:article, category: :news) }
 
-      it 'should have a delimited number of article per page' do
+        before { get :index, params: { category: :scientific } }
+
+        it 'returns all articles of this category' do
+          expect(assigns[:articles]).to eq [scientific]
+        end
       end
     end
 
-    context 'category selected' do
-      let!(:scientific) { FactoryBot.create(:article, category: :scientific) }
-      let!(:news) { FactoryBot.create(:article, category: :news) }
+    context 'paginate' do
+      let!(:articles) { FactoryBot.create_list(:article, 11) }
+      before do
+        get :index
+      end
 
-      before { get :index, params: { category: :scientific } }
+      it 'should have a delimited number of articles per page' do
+        expect(Kaminari.paginate_array(articles).page(2).per(10).length).to eq(1)
+      end
+    end
 
-      it 'returns all articles of this category' do
-        expect(assigns[:articles]).to eq [scientific]
+    context 'ordenate' do
+      let(:article1) { FactoryBot.create(:article, created_at: DateTime.new(2020, 6, 17, 10, 23, 19)) }
+      let(:article2) { FactoryBot.create(:article, created_at: DateTime.new(2020, 6, 16, 10, 23, 19)) }
+      let(:article3) { FactoryBot.create(:article, created_at: DateTime.new(2020, 6, 22, 10, 23, 19)) }
+
+      before do
+        article1
+        article2
+        article3
+        get :index
+      end
+
+      it 'be organized in descending order' do
+        expect(assigns[:articles]).to eq([article3, article1, article2])
       end
     end
   end
 
   describe '#show' do
+    let(:article) { FactoryBot.create(:article) }
     context 'when article_id is present and valid' do
-      let(:article) { FactoryBot.create(:article) }
       before { get :show, params: { id: article.id } }
 
       it 'render show page' do
@@ -40,13 +64,11 @@ RSpec.describe ArticlesController, type: :controller do
       end
     end
 
-    context 'when article_id is not present' do
-      it 'redirect to error page' do
-      end
-    end
-
     context 'when articles_id is not valid' do
-      it 'redirect to error page' do
+      before { get :show, params: { id: 'hh' } }
+
+      it 'redirect to index' do
+        expect(response).to redirect_to(articles_path)
       end
     end
   end
@@ -67,6 +89,7 @@ RSpec.describe ArticlesController, type: :controller do
 
     context 'when http_autenticate not given' do
       before { get :new }
+
       it 'unauthorizate to create new article' do
         is_expected.to respond_with(401)
       end
@@ -117,13 +140,17 @@ RSpec.describe ArticlesController, type: :controller do
       end
     end
 
-    context 'when article_id is not present' do
-      it 'redirects to error page' do
+    context 'when article_id is valid' do
+      let(:article) { FactoryBot.create(:article) }
+      before do
+        user = 'dhh'
+        pw = 'secret'
+        request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user, pw)
+        get :edit, params: { id: 'hh' }
       end
-    end
 
-    context 'when article_id is not valid' do
-      it 'redirects to error page' do
+      it 'redirects to #index' do
+        expect(response).to redirect_to(articles_path)
       end
     end
   end
@@ -135,7 +162,7 @@ RSpec.describe ArticlesController, type: :controller do
         user = 'dhh'
         pw = 'secret'
         request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user, pw)
-        patch :update, params: { id: article.id, article: { text: 'asoufhaof' } }
+        patch :update, params: { id: article.id, article: { text: 'anything' } }
       end
 
       it 'redirects to show page' do
