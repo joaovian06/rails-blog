@@ -27,12 +27,10 @@ RSpec.describe ArticlesController, type: :controller do
 
     context 'paginate' do
       let!(:articles) { FactoryBot.create_list(:article, 11) }
-      before do
-        get :index
-      end
+      before { get :index }
 
       it 'should have a delimited number of articles per page' do
-        expect(Kaminari.paginate_array(articles).page(2).per(10).length).to eq(1)
+        expect(Kaminari.paginate_array(assigns[:articles]).length).to eq(10)
       end
     end
 
@@ -47,6 +45,13 @@ RSpec.describe ArticlesController, type: :controller do
 
       it 'be organized in descending order' do
         expect(assigns[:articles]).to eq([article3, article1, article2])
+      end
+    end
+
+    describe 'string finder' do
+      context 'when given a whole word' do
+        it 'returns all articles titles with this word in' do
+        end
       end
     end
   end
