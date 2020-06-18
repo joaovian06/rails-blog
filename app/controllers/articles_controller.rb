@@ -41,8 +41,8 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    @article = Article.find(params[:id])
-    @article.destroy
+    @article = Article.find_by(id: params[:id])
+    @article.destroy if @article.present?
 
     redirect_to articles_path
   end

@@ -37,14 +37,11 @@ RSpec.describe ArticlesController, type: :controller do
     end
 
     context 'ordenate' do
-      let(:article1) { FactoryBot.create(:article, created_at: DateTime.new(2020, 6, 17, 10, 23, 19)) }
-      let(:article2) { FactoryBot.create(:article, created_at: DateTime.new(2020, 6, 16, 10, 23, 19)) }
-      let(:article3) { FactoryBot.create(:article, created_at: DateTime.new(2020, 6, 22, 10, 23, 19)) }
+      let!(:article1) { FactoryBot.create(:article, created_at: DateTime.new(2020, 6, 17, 10, 23, 19)) }
+      let!(:article2) { FactoryBot.create(:article, created_at: DateTime.new(2020, 6, 16, 10, 23, 19)) }
+      let!(:article3) { FactoryBot.create(:article, created_at: DateTime.new(2020, 6, 22, 10, 23, 19)) }
 
       before do
-        article1
-        article2
-        article3
         get :index
       end
 
@@ -185,19 +182,37 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe '#destroy' do
+    let!(:article) { FactoryBot.create(:article) }
     context 'when article_id is present and valid' do
+      before do
+        user = 'dhh'
+        pw = 'secret'
+        request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user, pw)
+      end
+
       it 'redirects to index page' do
+        delete :destroy, params: { id: article.id }
+        expect(response).to redirect_to(articles_path)
       end
 
       it 'destroy the article' do
+        expect { delete :destroy, params: { id: article.id } }.to change(Article, :count).by(-1)
       end
     end
 
     context 'when article_id is not valid' do
+      before do
+        user = 'dhh'
+        pw = 'secret'
+        request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user, pw)
+        delete :destroy, params: { id: 'hh' }
+      end
       it 'redirects to index page' do
+        expect(response).to redirect_to(articles_path)
       end
 
       it 'does not destroy the article' do
+        expect { delete :destroy, params: { id: 'hh' } }.to_not change(Article, :count)
       end
     end
   end
