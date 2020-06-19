@@ -27,10 +27,21 @@ RSpec.describe ArticlesController, type: :controller do
 
     context 'paginate' do
       let!(:articles) { FactoryBot.create_list(:article, 11) }
-      before { get :index }
 
-      it 'should have a delimited number of articles per page' do
-        expect(Kaminari.paginate_array(assigns[:articles]).length).to eq(10)
+      context 'when param page not present' do
+        before { get :index }
+
+        it 'should have a delimited number of articles per page' do
+          expect(assigns[:articles].length).to eq(10)
+        end
+      end
+
+      context 'when param page is present' do
+        before { get :index, params: { page: 2 } }
+
+        it 'should render page 2' do
+          expect(assigns[:articles].length).to eq(1)
+        end
       end
     end
 
@@ -50,7 +61,12 @@ RSpec.describe ArticlesController, type: :controller do
 
     describe 'string finder' do
       context 'when given a whole word' do
-        it 'returns all articles titles with this word in' do
+        let!(:article) { FactoryBot.create(:article, title: 'The most beatiful article') }
+        let!(:articles) { FactoryBot.create_list(:article, 3) }
+
+        it 'returns all articles with this word in title' do
+          get :index, params: { search: article.title }
+          expect(assigns[:articles]).to eq([article])
         end
       end
     end
@@ -142,7 +158,7 @@ RSpec.describe ArticlesController, type: :controller do
       end
     end
 
-    context 'when article_id is valid' do
+    context 'when article_id is not valid' do
       let(:article) { FactoryBot.create(:article) }
       before do
         user = 'dhh'
@@ -212,6 +228,7 @@ RSpec.describe ArticlesController, type: :controller do
         request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user, pw)
         delete :destroy, params: { id: 'hh' }
       end
+
       it 'redirects to index page' do
         expect(response).to redirect_to(articles_path)
       end
