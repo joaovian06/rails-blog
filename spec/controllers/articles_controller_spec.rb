@@ -59,14 +59,23 @@ RSpec.describe ArticlesController, type: :controller do
       end
     end
 
-    describe 'string finder' do
+    fdescribe 'string finder' do
       context 'when given a whole word' do
-        let!(:article) { FactoryBot.create(:article, title: 'The most beatiful article') }
+        let!(:article) { FactoryBot.create(:article, title: 'The most beautiful article') }
         let!(:articles) { FactoryBot.create_list(:article, 3) }
 
         it 'returns all articles with this word in title' do
           get :index, params: { search: article.title }
           expect(assigns[:articles]).to eq([article])
+        end
+      end
+
+      context 'when given a word as param' do
+        let!(:articles) { FactoryBot.create_list(:article, 3, title: 'The most beautiful article') }
+
+        it 'return all matches with this word' do
+          get :index, params: { search: 'beautiful' }
+          expect(assigns[:articles]).to eq(articles)
         end
       end
     end
