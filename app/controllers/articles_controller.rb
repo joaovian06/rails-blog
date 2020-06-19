@@ -51,7 +51,7 @@ class ArticlesController < ApplicationController
   private
 
   def search_param
-    params.fetch(:search, '')
+    params[:search]
   end
 
   def filter_param
