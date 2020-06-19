@@ -6,7 +6,7 @@ class ArticlesController < ApplicationController
   def index
     @articles = Article.order(created_at: :desc).page(param_page).per(PER_PAGE)
     @articles = @articles.where(category: filter_param) if filter_param.present?
-    @articles = @articles.where(title: search_param) if search_param.present?
+    @articles = @articles.where('title LIKE ?', "%#{search_param}%") if search_param.present?
   end
 
   def show

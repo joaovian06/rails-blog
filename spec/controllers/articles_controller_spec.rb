@@ -75,7 +75,7 @@ RSpec.describe ArticlesController, type: :controller do
 
         it 'return all matches with this word' do
           get :index, params: { search: 'beautiful' }
-          expect(assigns[:articles]).to eq(articles)
+          expect(assigns[:articles]).to match_array(articles)
         end
       end
     end
