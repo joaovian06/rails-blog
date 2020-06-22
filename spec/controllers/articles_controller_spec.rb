@@ -63,15 +63,21 @@ RSpec.describe ArticlesController, type: :controller do
       fcontext 'when given a word or a partial word' do
         let!(:articles) { FactoryBot.create_list(:article, 3, title: 'The most beautiful article', text: 'The body of this article') }
         let!(:article) { FactoryBot.create(:article, title: 'Random title', text: 'text') }
+        let!(:comments) { FactoryBot.create_list(:comment, 3, article: article, body: 'comment text') }
 
         it 'return all matches with this string on title' do
           get :index, params: { search: 'beautiful' }
           expect(assigns[:articles]).to match_array(articles)
         end
 
-        it 'returns all matches with this phrase on text' do
+        it 'returns all matches with this string on text' do
           get :index, params: { search: 'body' }
           expect(assigns[:articles]).to match_array(articles)
+        end
+
+        it 'returns all matches with this string on comments' do
+          get :index, params: { search: 'comment text' }
+          expect(assigns[:articles]).to match_array([article])
         end
       end
     end
