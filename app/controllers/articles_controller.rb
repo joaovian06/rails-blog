@@ -50,10 +50,6 @@ class ArticlesController < ApplicationController
 
   private
 
-  def search_in_comments
-    params[:search_in_comments]
-  end
-
   def search_param
     params[:search]
   end
