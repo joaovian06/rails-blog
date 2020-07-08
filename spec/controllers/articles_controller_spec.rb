@@ -60,7 +60,7 @@ RSpec.describe ArticlesController, type: :controller do
     end
 
     describe 'string finder' do
-      fcontext 'when given a word or a partial word' do
+      context 'when given a word or a partial word' do
         let!(:articles) { FactoryBot.create_list(:article, 3, title: 'The most beautiful article', text: 'The body of this article') }
         let!(:article) { FactoryBot.create(:article, title: 'Random title', text: 'text') }
         let!(:comments) { FactoryBot.create_list(:comment, 3, article: article, body: 'comment text') }

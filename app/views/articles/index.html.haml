@@ -6,6 +6,9 @@
   %p
     = form.text_field :search, value: params[:search]
   %p
+    = form.check_box :search_in_comments, {}, '1', '0'
+    = form.label 'pesquisar nos comentários?'
+  %p
     = form.submit "Search"
 %table
 
