@@ -4,6 +4,8 @@
   %p
     = form.select :category, Article.categories, include_blank: 'All', selected: params[:category]
   %p
+    = form.text_field :search, value: params[:search]
+  %p
     = form.submit "Search"
 %table
 
