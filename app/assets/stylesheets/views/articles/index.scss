@@ -1,0 +1,35 @@
+@import '../node_modules/rfs/scss';
+h1 {
+  margin: 50px;
+}
+
+.filter-select {
+  display: block;
+
+}
+
+.input_search {
+  display: block;
+}
+
+.text-link-white, .text-link-white:hover {
+  display: block;
+  color: #fff;
+  @include rfs(64);
+}
+
+.text-link-black, .text-link-black:hover {
+  color: #000;
+  @include rfs(128);
+}
+
+.card {
+  max-height: 250px;
+  min-height: 250px;
+}
+
+.button-card, .button-card:hover {
+  display: block;
+  font-size: 20px;
+  color: #fff;
+}

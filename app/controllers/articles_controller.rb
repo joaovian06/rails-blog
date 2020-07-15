@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
   http_basic_authenticate_with name: 'dhh', password: 'secret',
   except: [:index, :show]
-  PER_PAGE = 10
+  PER_PAGE = 12
 
   def index
     @articles = Article.order(created_at: :desc).page(param_page).per(PER_PAGE)

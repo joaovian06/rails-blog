@@ -16,8 +16,15 @@ require("channels")
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
+import $ from 'jquery';
+import select2 from 'select2';
+import 'select2/dist/css/select2.css';
 
 import 'bootstrap'
+
+window.addEventListener('DOMContentLoaded', () => {
+  $('#category').select2()
+})
 
 document.addEventListener("turbolinks:load", () => {
   $('[data-toggle="tooltip"]').tooltip()

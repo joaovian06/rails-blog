@@ -1,30 +1,48 @@
 = stylesheet_pack_tag 'views/articles/index'
+= stylesheet_link_tag 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
+.container.text-center
+  %h1 Listing all articles
 
-%h1 Listing all articles
+  = form_with method: :get, local: true, url: articles_url do |form|
+    .row.mb-4
+      .col-sm-2.d-flex.justify-content-start.align-self-center
+        %div{data: { toggle:'tooltip', placement:'top', title:'Filter Article By Category' } }
+          = form.select :category, Article.categories, {include_blank: 'All', selected: params[:category] }
+      .col-sm-4.d-flex.justify-content-center.align-self-center
+        = form.text_field :search, value: params[:search], placeholder: 'Search'
+      .col-sm-2.align-self-center
+        %button.btn.btn-primary.btn-block{ type: 'form.submit', data: { toggle:'tooltip', placement: 'top', title:'Submit Search' } }
+          .fa.fa-search
+      .col-sm-4.d-flex.justify-content-center
+        .button.btn.btn-secondary{ data: { toggle:'tooltip', placement: 'top', title:'New Article' } }
+          = link_to new_article_url, class: 'text-link-white' do
+            .fa.fa-plus.fa-2x
 
-= form_with method: :get, local: true, url: articles_url do |form|
-  %p
-    = form.select :category, Article.categories, include_blank: 'All', selected: params[:category]
-  %p
-    = form.text_field :search, value: params[:search]
-  %p
-    = form.submit "Search"
-%table
-
-  %tr
-    %th Title
-    %th Text
-    %th Category
-
-  - @articles.each do |article|
-    %tr
-      %td= article.title
-      %td= article.text
-      %td= article.category
-      %td= link_to 'Show', article_path(article)
-      %td= link_to 'Edit', edit_article_path(article)
-      %td= link_to 'Destroy', article_path(article),
-        method: :delete,
-        data: { confirm: 'Are you sure?' }
-  %td= link_to 'New Article', new_article_url
-= paginate @articles
+  .row
+    - @articles.each do |article|
+      .col-sm-4
+        .card.mb-3
+          .card.card-body.d-flex.flex-column
+            .container
+              .button.btn.btn-link.font-weight-bold.mb-auto{ data: { toggle:'tooltip', placement: 'top', title:'Show Article' } }
+                = link_to article_path(article),class: 'text-link-black' do
+                  = article.title
+              .card-subtitle.mb-2.text-muted.mb-auto= article.category.capitalize
+            .card-text.mb-auto= truncate(article.text, length: 50)
+            .align-bottom
+              .container
+                .row.justify-content-center
+                  .col-sm-6
+                    .button.btn.btn-primary.btn-block.mt-auto{ data: { toggle:'tooltip', placement: 'top', title:'Edit Article' } }
+                      = link_to edit_article_path(article), class: 'button-card' do
+                        .fa.fa-pencil
+                  .col-sm-6
+                    .button.btn.btn-danger.btn-block.mt-auto{ data: { toggle:'tooltip', placement: 'top', title:'Delete Article' } }
+                      = link_to article_path(article),
+                        method: :delete,
+                        data: { confirm: 'Are you sure?' }, class: 'text-link-white', class: 'button-card' do
+                        .fa.fa-trash.fa-lg
+  .row
+    .col-sm-12
+      .d-inline-flex.p-2
+        = paginate @articles, theme: 'twitter-bootstrap-4'
