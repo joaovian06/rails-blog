@@ -29,19 +29,18 @@
                   = article.title
               .card-subtitle.mb-2.text-muted.mb-auto= article.category.capitalize
             .card-text.mb-auto= truncate(article.text, length: 50)
-            .align-bottom
-              .container
-                .row.justify-content-center
-                  .col-sm-6
-                    .button.btn.btn-primary.btn-block.mt-auto{ data: { toggle:'tooltip', placement: 'top', title:'Edit Article' } }
-                      = link_to edit_article_path(article), class: 'button-card' do
-                        .fa.fa-pencil
-                  .col-sm-6
-                    .button.btn.btn-danger.btn-block.mt-auto{ data: { toggle:'tooltip', placement: 'top', title:'Delete Article' } }
-                      = link_to article_path(article),
-                        method: :delete,
-                        data: { confirm: 'Are you sure?' }, class: 'text-link-white', class: 'button-card' do
-                        .fa.fa-trash.fa-lg
+            .container
+              .row.justify-content-center
+                .col-sm-6
+                  .button.btn.btn-primary.btn-block.mt-auto{ data: { toggle:'tooltip', placement: 'top', title:'Edit Article' } }
+                    = link_to edit_article_path(article), class: 'button-card' do
+                      .fa.fa-pencil
+                .col-sm-6
+                  .button.btn.btn-danger.btn-block.mt-auto{ data: { toggle:'tooltip', placement: 'top', title:'Delete Article' } }
+                    = link_to article_path(article),
+                      method: :delete,
+                      data: { confirm: 'Are you sure?' }, class: 'text-link-white' do
+                      .fa.fa-trash.fa-lg
   .row
     .col-sm-12
       .d-inline-flex.p-2

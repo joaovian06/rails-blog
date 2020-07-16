@@ -1,16 +1,38 @@
-%p
-  %strong Title:
-  = @article.title
-%p
-  %strong Text:
-  = @article.text
-%p
-  %strong Category:
-  = @article.category
-%h2 Comments
-= render @article.comments
-%h2 Add a comment:
-= render 'comments/form'
-= link_to 'Edit', edit_article_path(@article)
-|
-= link_to 'Back', articles_path
+= stylesheet_pack_tag 'views/articles/show'
+= stylesheet_link_tag 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
+
+
+.container
+  .row.d-flex.justify-content-center
+    .col
+      .card.d-flex
+        .card.card-body.d-flex.flex-column
+          .card-text.mb-auto
+            %h2= @article.title
+          .card-subtitle.mb-2.text-muted.mb-auto
+            = @article.category
+          .card-text.mb-auto
+            = @article.text
+
+          .container
+            .row
+              .col-sm-4
+                .button.btn.btn-primary{ data: { toggle:'tooltip', placement: 'top', title:'Edit Article' } }
+                  = link_to edit_article_path(@article) do
+                    .fa.fa-pencil
+              .col-sm-4
+                .button.btn.btn-sucess{ data: { toggle:'tooltip', placement:'top', title:'Back' } }
+                  = link_to articles_path do
+                    .fa.fa-undo
+
+
+  .row
+    .col
+      .card.d-flex
+        .card-body
+          %h2 Comments
+          = render @article.comments
+          .card.d-flex
+            .card.card-body
+              %h2 Add a comment:
+              = render 'comments/form'

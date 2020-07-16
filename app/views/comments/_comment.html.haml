@@ -1,10 +1,15 @@
-%p
-  %strong Commenter:
-  = comment.commenter
-%p
-  %strong Comment:
-  = comment.body
-%p
-  = link_to 'Destroy Comment', [comment.article, comment], |
-    method: :delete,                                       |
-    data: { confirm: 'Are you sure?' }                     |
+= stylesheet_pack_tag 'views/comments/_comment'
+.container
+  .row
+    .col
+      .card
+        .card.body
+          .card-title
+            = comment.commenter
+          .card-text
+            = comment.body
+          .button.btn.btn-danger{ data: { toggle:'tooltip', placement: 'top', title:'Delete Comment' } }
+            = link_to [comment.article, comment],
+              method: :delete,
+              data: { confirm: 'Are you sure?' } do
+              .fa.fa-trash.fa-lg
